@@ -84,6 +84,10 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     	return MAJOR_CITIES.length;
         //return mCursor.getCount();
     }
+    
+    public static int getHourMilliseconds(int hours) {
+    	return hours*60*60*1000;
+    }
 
     public RemoteViews getViewAt(int position) {
         // Get the data for this position from the content provider
@@ -102,7 +106,9 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         String time = "";
         long currentTime = System.currentTimeMillis();
         DateFormat df = DateFormat.getInstance();
-        df.setTimeZone(TimeZone.getTimeZone(id))
+        
+        String[] availableIds = TimeZone.getAvailableIDs(StackRemoteViewsFactory.getHourMilliseconds(TIME_SHIFT_HOURS[position]));
+        df.setTimeZone(TimeZone.getTimeZone(availableIds[0]));
         // Return a proper item with the proper city and temperature.  Just for fun, we alternate
         // the items to make the list easier to read.
         final String formatStr = mContext.getResources().getString(R.string.item_format_string);
